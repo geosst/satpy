@@ -33,7 +33,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 def np2str(value):
-    """Convert an np.string_ to str."""
+    """Convert an `numpy.string_` to str."""
     if issubclass(value.dtype.type, np.string_) and not value.shape:
         value = np.asscalar(value)
         if not isinstance(value, str):
