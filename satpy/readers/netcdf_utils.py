@@ -30,6 +30,7 @@ import numpy as np
 import logging
 
 from satpy.readers.file_handlers import BaseFileHandler
+from satpy.readers.helper_functions import np2str
 
 LOG = logging.getLogger(__name__)
 
@@ -87,11 +88,11 @@ class NetCDF4FileHandler(BaseFileHandler):
         """
         for key in obj.ncattrs():
             value = getattr(obj, key)
-            value = np.squeeze(value)
-            if issubclass(value.dtype.type, str) or np.issubdtype(value.dtype, np.character):
-                self.file_content["{}/attr/{}".format(name, key)] = str(value)
-            else:
-                self.file_content["{}/attr/{}".format(name, key)] = value
+            fc_key = "{}/attr/{}".format(name, key)
+            try:
+                self.file_content[fc_key] = np2str(value)
+            except ValueError:
+                self.file_content[fc_key] = value
 
     def collect_metadata(self, name, obj):
         """Collect all file variables and attributes for the provided file object.
